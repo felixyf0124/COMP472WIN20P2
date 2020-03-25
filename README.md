@@ -1,6 +1,8 @@
 # COMP472WIN20P2
 COMP 472 win2020 team project 2
 
+AI with Naive Bayes classification for natural language processing
+
 ### Team SkAI360
 members:
 name | student id | email | git id
