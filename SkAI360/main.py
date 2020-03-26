@@ -1,4 +1,6 @@
 import Loader as ld
 
-loader = ld.Loader("dataset/test-tweets-given.txt")
-loader = ld.Loader("dataset/training-tweets.txt")
+trainingFile = "dataset/training-tweets.txt"
+testingFile = "dataset/test-tweets-given.txt"
+
+loader = ld.Loader(0, 1, 0.1, trainingFile, testingFile)
