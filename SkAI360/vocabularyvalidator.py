@@ -1,8 +1,14 @@
+import string
 import re
 
 
 class VocabularyValidator:
    
+    def __init__(self):
+        self.vocabSet = []
+        self.__addVocabSet1()
+        self.__addVocabSet2()
+
     # type 0: 
     # Fold the corpus to lowercase 
     # and use only the 26 letters of the alphabet [a-z]
@@ -44,3 +50,15 @@ class VocabularyValidator:
             return self.verify1(vocabulary)
         if(type == 2):
             return self.verify2(vocabulary)
+
+    def __addVocabSet1(self):
+        vocabSet = set(string.ascii_lowercase)
+        self.vocabSet.append(vocabSet)
+
+    def __addVocabSet2(self):
+        vocabSet = set(string.ascii_letters)
+        self.vocabSet.append(vocabSet)
+
+    # def __addVocabSet3(self):
+    #     vocabSet = set(string.)
+    #     self.vocabSet.append(vocabSet)
