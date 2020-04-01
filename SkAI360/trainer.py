@@ -35,6 +35,18 @@ class Trainer:
         self.enTtlCount = 0
         self.ptTtlCount = 0
 
+    # return V
+    def getV(self):
+        return self.V
+
+    # return n
+    def getN(self):
+        return self.n
+
+    # return smooth value delta
+    def getDelta(self):
+        return self.delta
+
     # return a list of filtered data from the line str
     def __popFeedList(self, lineStr):
         popList = []

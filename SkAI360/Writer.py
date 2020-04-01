@@ -1,9 +1,14 @@
 class Writer:
-    def __init__(self, content):
+    def __init__(self, filename, content):
+        self.filename = filename
         self.content = content
 
     def outputWriter(self):
-        filename = "output.txt"
-        file = open(filename, "w+")
+        file = open(self.filename, "w+")
         file.write(self.content)
         file.close
+
+
+print("ASD")
+writer = Writer("AAA")
+writer.outputWriter()

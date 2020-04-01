@@ -8,16 +8,23 @@ import copy
 class Tester:
 
     def __init__(self, trainer: Trainer):
-        self.trainer = copy.deepcopy(Trainer)
+        self.trainer = trainer
 
     def classify(self, lineStr: str):
-        # self.trainer.
-        pass
+        scores = []
+        scores.append(["eu", self.getScore("eu", lineStr)])
+        scores.append(["ca", self.getScore("ca", lineStr)])
+        scores.append(["gl", self.getScore("gl", lineStr)])
+        scores.append(["es", self.getScore("es", lineStr)])
+        scores.append(["en", self.getScore("en", lineStr)])
+        scores.append(["pt", self.getScore("pt", lineStr)])
+        return sorted(scores, key=lambda score: score[1], reverse=False)
 
+    # return a list of chopped substr
     def __popChunkList(self, lineStr: str):
         popList = []
-        n = self.trainer.n
-        V = self.trainer.V
+        n = self.trainer.getN()
+        V = self.trainer.getV()
         if(len(lineStr) >= n):
             verifier = vv()
             for i in range(len(lineStr)-n):
@@ -27,15 +34,15 @@ class Tester:
         return popList
 
     # P(A|B) = P(A∩B)/P(B)
-    def naiveBayes(self, a, b):
-        pass
+    def naiveBayes(self, anb, b):
+        return anb/b
 
     # get score of specific language
     def getScore(self, language: str, lineStr: str):
         nonAppear = 0
         chunkList = self.__popChunkList(lineStr)
         letterList = []
-        smoothDelta = self.trainer.delta
+        smoothDelta = self.trainer.getDelta()
         for each in chunkList:
             counter = self.trainer.get(each, language)
             if(counter != None):

@@ -5,6 +5,7 @@ from vocabularyvalidator import VocabularyValidator as vv
 from ngram import NGram
 from loader import Loader as ld
 from trainer import Trainer
+from tester import Tester
 
 # vValidator = vv()
 
@@ -38,7 +39,7 @@ testingFile = "dataset/test-tweets-given.txt"
 verbose = False
 
 loader = ld(trainingFile, testingFile, verbose)
-trainer = Trainer(0, 3, 0.1)
+trainer = Trainer(2, 3, 0.1)
 loader.resetLineCursor()
 
 line = loader.getNextLineInTrainingData()
@@ -48,12 +49,12 @@ while (line != None):
     line = loader.getNextLineInTrainingData()
 
 # line = loader.getNextLineInTrainingData()
-print(trainer.euTab.table, 'eu')
-print(trainer.caTab.table, 'ca')
-print(trainer.glTab.table, 'gl')
-print(trainer.esTab.table, 'es')
-print(trainer.enTab.table, 'en')
-print(trainer.ptTab.table, 'pt')
+# print(trainer.euTab.table, 'eu')
+# print(trainer.caTab.table, 'ca')
+# print(trainer.glTab.table, 'gl')
+# print(trainer.esTab.table, 'es')
+# print(trainer.enTab.table, 'en')
+# print(trainer.ptTab.table, 'pt')
 # while(line != None):
 #     trainer.feedLineInfo(line[2], line[3])
 #     line = loader.getNextLineInTrainingData()
@@ -69,3 +70,13 @@ print(trainer.ptTab.table, 'pt')
 # print(trainer.ptTab.table)
 
 # print(math.log10(10))
+
+tester = Tester(trainer)
+
+loader.resetLineCursor()
+
+line = loader.getNextLineInTestingData()
+scores = tester.classify(line[3])
+print(10**math.log10(10))
+print(math.pow(10, math.log10(10)))
+print(10**scores[0][1])
