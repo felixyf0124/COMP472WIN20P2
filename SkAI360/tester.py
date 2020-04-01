@@ -9,6 +9,10 @@ class Tester:
 
     def __init__(self, trainer: Trainer):
         self.trainer = trainer
+        self.tracer = dict()
+        self.lineCursor = 0
+        self.correct = 0
+        self.wrong = 0
 
     def classify(self, lineStr: str):
         scores = []
@@ -61,3 +65,60 @@ class Tester:
             for x in range(nonAppear):
                 score += math.log10(smoothDelta/ttlSoomthed)
         return score
+
+    def doTestLine(self, line: [], atLine: int):
+        scores = self.classify(line[3])
+        # print(scores)
+        classifiedLan = scores[0][0]
+        score = scores[0][1]
+        if(classifiedLan == line[2]):
+            correctness = "correct"
+            self.correct += 1
+        else:
+            correctness = "wrong"
+            self.wrong += 1
+        # (tweet id, most likely class, score of the most likely class, correctness label)
+        self.tracer[atLine] = [line[0], classifiedLan,
+                               score,  line[2], correctness]
+
+    def getNextLinesString(self, numOfLines: int = 1):
+        content = ""
+        count = 0
+        while((count < numOfLines) & (self.lineCursor + 1 in self.tracer)):
+            self.lineCursor += 1
+            count += 1
+            line = self.tracer[self.lineCursor]
+            content += line[0]+"\t"
+            content += line[1]+"\t"
+            # score
+            content += self.format_e(line[2])+"\t"
+            content += line[3]+"\t"
+            content += line[4]+"\n"
+
+        return content
+
+    # return a format of e scientific
+    def format_e(self, n):
+        formated = '{:.2e}'.format(n)
+        return formated
+
+    # reset trace line cursor at line (default 0)
+    def resetTraceCursor(self, atLine: int = 0):
+        self.lineCursor = atLine
+
+    # generate file name
+    def generateFileName(self):
+        filename = ""
+        filename += 'trace_' + str(self.trainer.getV())
+        filename += '_' + str(self.trainer.getN())
+        filename += '_' + str(self.trainer.getDelta()) + '.txt'
+        return filename
+
+    def getTotalLineSize(self):
+        return len(self.tracer)
+
+    def getLineCursorPos(self):
+        return self.lineCursor
+
+    def getAccuracy(self):
+        return str((self.correct)/(self.correct + self.wrong) * 100) + '%'

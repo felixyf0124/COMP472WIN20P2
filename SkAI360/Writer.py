@@ -1,14 +1,17 @@
 class Writer:
-    def __init__(self, filename, content):
+    def __init__(self, filename):
         self.filename = filename
-        self.content = content
 
-    def outputWriter(self):
-        file = open(self.filename, "w+")
-        file.write(self.content)
+    def overwrite(self, content):
+        file = open(self.filename, "w+", encoding="utf8")
+        file.write(content)
         file.close
 
+    def writeAtEOF(self, content):
+        with open(self.filename, "a", encoding="utf8") as file:
+            file.write(content)
+            file.close
 
-print("ASD")
-writer = Writer("AAA")
-writer.outputWriter()
+
+writer = Writer('output.txt')
+writer.writeAtEOF('AAA')

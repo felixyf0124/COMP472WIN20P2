@@ -54,3 +54,7 @@ class Loader:
     # get a specific line in trainingData
     def getLineInTestingData(self, n: int):
         return self.testingData.get(n, None)
+
+    # get line cursor index position
+    def getLineCursorPos(self):
+        return self.lineCursor
