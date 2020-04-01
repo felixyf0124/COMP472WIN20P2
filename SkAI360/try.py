@@ -1,3 +1,4 @@
+import math
 import string
 import locale
 from vocabularyvalidator import VocabularyValidator as vv
@@ -35,12 +36,12 @@ i = 0
 trainingFile = "dataset/training-tweets.txt"
 testingFile = "dataset/test-tweets-given.txt"
 
-loader = ld(0, 1, 0.1, trainingFile, testingFile)
+loader = ld(0, 3, 0.1, trainingFile, testingFile)
 loader.resetLineCursor()
 line = loader.getNextLineInTrainingData()
 print(line)
 
-trainer = Trainer(2, 1, 0.1)
+trainer = Trainer(2, 3, 0.1)
 # trainer.feedLineInfo()
 # loader.resetLineCursor()
 while(line != None):
@@ -48,11 +49,13 @@ while(line != None):
 
     line = loader.getNextLineInTrainingData()
 
-print(trainer.tab.table)
+# print(trainer.tab.table)
 
 print(trainer.euTab.table)
-print(trainer.caTab.table)
-print(trainer.glTab.table)
-print(trainer.esTab.table)
-print(trainer.enTab.table)
-print(trainer.ptTab.table)
+# print(trainer.caTab.table)
+# print(trainer.glTab.table)
+# print(trainer.esTab.table)
+# print(trainer.enTab.table)
+# print(trainer.ptTab.table)
+
+print(math.log10(10))

@@ -128,3 +128,37 @@ class NGram:
                 self.__feed2Gram(subStr)
             if(self.n == 3):
                 self.__feed3Gram(subStr)
+
+    # get value from 1-gram
+    def __getFrom1Gram(self, key: str):
+        return self.table.get(key, None)
+
+    # get value from 2-gram
+    def __getFrom2Gram(self, key: str):
+        if(key[0] not in self.table):
+            return None
+        else:
+            return self.table[key[0]].get(key[1], None)
+
+    # get value from 3-gram
+    def __getFrom3Gram(self, key: str):
+        if(key[0] not in self.table):
+            return None
+        elif(key[1] not in self.table[key[0]]):
+            return None
+        else:
+            return self.table[key[0]][key[1]].get(key[2], None)
+
+    def get(self, key: str):
+        if(len(key) != self.n):
+            error = "Invalid input: input length does not match the current n-gram size.\n"
+            error += "input size: " + str(range(key)) + "\n"
+            error += "current n-gram size: " + str(self.n) + "\n"
+            raise Exception(error)
+        else:
+            if(self.n == 1):
+                self.__getFrom1Gram(key)
+            if(self.n == 2):
+                self.__getFrom2Gram(key)
+            if(self.n == 3):
+                self.__getFrom3Gram(key)

@@ -15,6 +15,14 @@ class Trainer:
         self.enTab = ng(V, n, delta)  # English
         self.ptTab = ng(V, n, delta)  # Portuguese
 
+        self.ttlCount = 0
+        self.euTtlCount = 0
+        self.caTtlCount = 0
+        self.glTtlCount = 0
+        self.esTtlCount = 0
+        self.enTtlCount = 0
+        self.ptTtlCount = 0
+
     # return a list of filtered data from the line str
     def __popFeedList(self, lineStr):
         popList = []
@@ -29,34 +37,37 @@ class Trainer:
     # feed total base table
     def __feedBase(self, data: str):
         self.tab.feed(data)
+        self.ttlCount += 1
 
     # feed Basque table
     def __feedEU(self, data: str):
         self.euTab.feed(data)
+        self.euTtlCount += 1
 
     # feed Catalan table
     def __feedCA(self, data: str):
         self.caTab.feed(data)
+        self.caTtlCount += 1
 
     # feed Galician table
     def __feedGL(self, data: str):
         self.glTab.feed(data)
+        self.glTtlCount += 1
 
     # feed Spanish table
     def __feedES(self, data: str):
         self.esTab.feed(data)
+        self.esTtlCount += 1
 
     # feed English table
     def __feedEN(self, data: str):
         self.enTab.feed(data)
+        self.enTtlCount += 1
 
     # feed Portuguese table
     def __feedPT(self, data: str):
         self.ptTab.feed(data)
-
-    # feed Spanish table
-    def __feedEU(self, data: str):
-        self.euTab.feed(data)
+        self.ptTtlCount += 1
 
     def feedLineInfo(self, language: str, lineStr: str):
         if(self.V == 0):
@@ -98,3 +109,46 @@ class Trainer:
             for each in filteredDateList:
                 self.__feedPT(each)
                 self.__feedBase(each)
+
+    # get value from base n-gram table at key
+    def getFromBase(self, key: str):
+        return self.euTab.get(key)
+
+    # get value from EU n-gram table at key
+    def getFromEU(self, key: str):
+        return self.euTab.get(key)
+
+    # get value from CA n-gram table at key
+    def getFromCA(self, key: str):
+        return self.caTab.get(key)
+
+    # get value from GL n-gram table at key
+    def getFromGL(self, key: str):
+        return self.glTab.get(key)
+
+    # get value from ES n-gram table at key
+    def getFromES(self, key: str):
+        return self.esTab.get(key)
+
+    # get value from EN n-gram table at key
+    def getFromEN(self, key: str):
+        return self.enTab.get(key)
+
+    # get value from PT n-gram table at key
+    def getFromPT(self, key: str):
+        return self.ptTab.get(key)
+
+    # get value from certain language table at key
+    def get(self, key: str, language: str):
+        if(language == "eu"):
+            return self.getFromEU(key)
+        if(language == "ca"):
+            return self.getFromCA(key)
+        if(language == "gl"):
+            return self.getFromGL(key)
+        if(language == "es"):
+            return self.getFromES(key)
+        if(language == "en"):
+            return self.getFromEN(key)
+        if(language == "pt"):
+            return self.getFromPT(key)
