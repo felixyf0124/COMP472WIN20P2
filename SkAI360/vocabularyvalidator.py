@@ -59,17 +59,3 @@ class VocabularyValidator:
     def __addVocabSet1(self):
         vocabSet = set(string.ascii_letters)
         self.vocabSet[1] = vocabSet
-
-    # add type 2 vocab set into dictionary
-    # def __addVocabSet2(self):
-
-        # default, encoding = locale.getdefaultlocale()
-        # languages = [default] + ['en_US', 'fr_FR', 'es_ES']
-        # lan = locale.getdefaultlocale('en_US',)
-        # for language in languages:
-        #     # data = LocaleData(language)
-        #     # alphabet = data.getExemplarSet()
-        #     # print(language, alphabet)
-        # vocabSet = set(string.ascii_letters)
-
-        # self.vocabSet[2] = vocabSet
