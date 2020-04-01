@@ -22,7 +22,7 @@ class Tester:
         scores.append(["es", self.getScore("es", lineStr)])
         scores.append(["en", self.getScore("en", lineStr)])
         scores.append(["pt", self.getScore("pt", lineStr)])
-        return sorted(scores, key=lambda score: score[1], reverse=False)
+        return sorted(scores, key=lambda score: score[1], reverse=True)
 
     # return a list of chopped substr
     def __popChunkList(self, lineStr: str):
