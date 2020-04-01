@@ -3,6 +3,7 @@ import locale
 from vocabularyvalidator import VocabularyValidator as vv
 from ngram import NGram
 from loader import Loader as ld
+from trainer import Trainer
 
 vValidator = vv()
 
@@ -38,3 +39,20 @@ loader = ld(0, 1, 0.1, trainingFile, testingFile)
 loader.resetLineCursor()
 line = loader.getNextLineInTrainingData()
 print(line)
+
+trainer = Trainer(2, 1, 0.1)
+# trainer.feedLineInfo()
+# loader.resetLineCursor()
+while(line != None):
+    trainer.feedLineInfo(line[2], line[3])
+
+    line = loader.getNextLineInTrainingData()
+
+print(trainer.tab.table)
+
+print(trainer.euTab.table)
+print(trainer.caTab.table)
+print(trainer.glTab.table)
+print(trainer.esTab.table)
+print(trainer.enTab.table)
+print(trainer.ptTab.table)

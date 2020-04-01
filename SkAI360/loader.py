@@ -57,9 +57,17 @@ class Loader:
     # get next line in trainingData
     def getNextLineInTrainingData(self):
         self.lineCursor += 1
-        return self.trainingData[self.lineCursor]
+        return self.trainingData.get(self.lineCursor, None)
+
+    # get a specific line in trainingData
+    def getLineInTrainingData(self, n: int):
+        return self.trainingData.get(n, None)
 
     # get next line in testingData
     def getNextLineInTestingData(self):
         self.lineCursor += 1
-        return self.testingData[self.lineCursor]
+        return self.testingData.get(self.lineCursor, None)
+
+    # get a specific line in trainingData
+    def getLineInTestingData(self, n: int):
+        return self.testingData.get(n, None)
