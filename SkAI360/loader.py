@@ -26,6 +26,7 @@ class Loader:
         trainingFile = open(trainingPath, "r", encoding="utf8")
         lineNum = 0
         for line in trainingFile:
+            line = line.rstrip('\n')
             if(len(line) > 0):
                 lineNum += 1
                 splited = line.split("\t", 3)
@@ -38,15 +39,16 @@ class Loader:
         testingFile = open(testingPath, "r", encoding="utf8")
         lineNum = 0
         for line in testingFile:
-             if(len(line) > 0):
-                    lineNum += 1
+            line = line.rstrip('\n')
+            if(len(line) > 0):
+                lineNum += 1
                 splited = line.split("\t", 3)
-                self.testingFile[lineNum] = splited
+                self.testingData[lineNum] = splited
         print('Testing Path:')
         print(lineNum)
         testingFile.close()
-        
-        self.lineCursor = 0;
+
+        self.lineCursor = 0
 
     # reset lineCurser = 0
     def resetLineCursor(self):
@@ -60,4 +62,4 @@ class Loader:
     # get next line in testingData
     def getNextLineInTestingData(self):
         self.lineCursor += 1
-        return self.testingData[self.lineCursor] 
+        return self.testingData[self.lineCursor]

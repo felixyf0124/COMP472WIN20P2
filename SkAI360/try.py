@@ -2,6 +2,7 @@ import string
 import locale
 from vocabularyvalidator import VocabularyValidator as vv
 from ngram import NGram
+from loader import Loader as ld
 
 vValidator = vv()
 
@@ -29,3 +30,11 @@ i = 0
 #     print(each)
 #     i+=1
 #     print(i)
+
+trainingFile = "dataset/training-tweets.txt"
+testingFile = "dataset/test-tweets-given.txt"
+
+loader = ld(0, 1, 0.1, trainingFile, testingFile)
+loader.resetLineCursor()
+line = loader.getNextLineInTrainingData()
+print(line)
