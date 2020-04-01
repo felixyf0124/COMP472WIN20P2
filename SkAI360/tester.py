@@ -26,15 +26,31 @@ class Tester:
                     popList.append(subStr)
         return popList
 
-    # get EU score
-    def getEUScore(self, lineStr: str):
+    # P(A|B) = P(A∩B)/P(B)
+    def naiveBayes(self, a, b):
+        pass
+
+    # get score of specific language
+    def getScore(self, language: str, lineStr: str):
         nonAppear = 0
         chunkList = self.__popChunkList(lineStr)
-        logDict = dict()
+        letterList = []
+        smoothDelta = self.trainer.delta
         for each in chunkList:
-            counter = self.trainer.get(each, "eu")
+            counter = self.trainer.get(each, language)
             if(counter != None):
-                logDict[each] = counter
+                letterList[each] = counter + smoothDelta
             else:
                 nonAppear += 1
-        # not finished
+        if(nonAppear > 0):
+            ttlSoomthed = (self.trainer.getTableSize(language)+1) * smoothDelta
+        else:
+            ttlSoomthed = (self.trainer.getTableSize(language)) * smoothDelta
+        score = 0
+        for each in letterList:
+            score += math.log10((letterList + smoothDelta)/ttlSoomthed)
+
+        if(nonAppear > 0):
+            for x in range(nonAppear):
+                score += math.log10(smoothDelta/ttlSoomthed)
+        return score

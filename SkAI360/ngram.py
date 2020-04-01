@@ -18,7 +18,9 @@ class NGram:
             self.__nGram1()
         elif(self.n == 2):
             self.__nGram2()
-        elif(self.n != 3):
+        elif(self.n == 3):
+            self.__nGram3()
+        else:
             # n = 3 while be realtime dynamic initialize
             # but if n ! = 1 or 2 or 3 then invalid input
             raise Exception("Invalid param n: " + str(n) + "\n")
@@ -149,6 +151,7 @@ class NGram:
         else:
             return self.table[key[0]][key[1]].get(key[2], None)
 
+    #  get speicfic key's value
     def get(self, key: str):
         if(len(key) != self.n):
             error = "Invalid input: input length does not match the current n-gram size.\n"
@@ -162,3 +165,20 @@ class NGram:
                 self.__getFrom2Gram(key)
             if(self.n == 3):
                 self.__getFrom3Gram(key)
+
+    # get table size
+    def getTableSize(self):
+        if(self.n == 1):
+            return len(self.table)
+        if(self.n == 2):
+            size = 0
+            for x in self.table:
+                size += len(x)
+            return size
+        if(self.n == 3):
+            size = 0
+            for x in self.table:
+                for y in x:
+                    size += len(y)
+
+            return size

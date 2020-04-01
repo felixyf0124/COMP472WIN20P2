@@ -3,7 +3,19 @@ from vocabularyvalidator import VocabularyValidator as vv
 
 
 class Trainer:
+    # V = vocabularyLevel 0: Fold the corpus to lowercase and use only the 26 letters of the alphabet [a-z]
+    # V = vocabularyLevel 1: Distinguish up and low cases and use only the 26 letters of the alphabet [a-z, A-Z]
+    # V = vocabularyLevel 2: Distinguish up and low cases and use all characters accepted by the built-in isalpha() method
+    # n = nGramSize: 1 = character unigrams, 2 = character bigrams, 3 = character trigrams
+    # delta = smoothingValue: real number representing the smoothing value
     def __init__(self, V: int, n: int, delta: float):
+        if((V < 0) & (V > 2)):
+            raise Exception("Invalid param V: " +
+                            str(V) + "\n")
+        if((n < 1) & (n > 3)):
+            raise Exception("Invalid param n: " +
+                            str(n) + "\n")
+
         self.V = V
         self.n = n
         self.delta = delta
@@ -152,3 +164,32 @@ class Trainer:
             return self.getFromEN(key)
         if(language == "pt"):
             return self.getFromPT(key)
+
+    # get total count for specific language
+    def getTTLCount(self, language: str):
+        if(language == "eu"):
+            return self.euTtlCount
+        if(language == "ca"):
+            return self.caTtlCount
+        if(language == "gl"):
+            return self.glTtlCount
+        if(language == "es"):
+            return self.esTtlCount
+        if(language == "en"):
+            return self.enTtlCount
+        if(language == "pt"):
+            return self.ptTtlCount
+
+    def getTableSize(self, language: str):
+        if(language == "eu"):
+            return self.euTab.getTableSize()
+        if(language == "ca"):
+            return self.caTab.getTableSize()
+        if(language == "gl"):
+            return self.glTab.getTableSize()
+        if(language == "es"):
+            return self.esTab.getTableSize()
+        if(language == "en"):
+            return self.enTab.getTableSize()
+        if(language == "pt"):
+            return self.ptTab.getTableSize()
