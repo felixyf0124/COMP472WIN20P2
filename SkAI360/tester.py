@@ -49,17 +49,22 @@ class Tester:
         smoothDelta = self.trainer.getDelta()
         for each in chunkList:
             counter = self.trainer.get(each, language)
+            # print(counter)
             if(counter != None):
-                letterList[each] = counter + smoothDelta
+                letterList.append(counter + smoothDelta)
             else:
                 nonAppear += 1
+
+        # print(chunkList)
+        # print(letterList)
+        # nonAppear = 0
         if(nonAppear > 0):
             ttlSoomthed = (self.trainer.getTableSize(language)+1) * smoothDelta
         else:
             ttlSoomthed = (self.trainer.getTableSize(language)) * smoothDelta
-        score = 0
+        score = 0.0
         for each in letterList:
-            score += math.log10((letterList + smoothDelta)/ttlSoomthed)
+            score += math.log10((each + smoothDelta)/ttlSoomthed)
 
         if(nonAppear > 0):
             for x in range(nonAppear):
