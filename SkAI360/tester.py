@@ -1,6 +1,8 @@
 from ngram import NGram as ng
 from vocabularyvalidator import VocabularyValidator as vv
 from trainer import Trainer
+from metrics import Metrics
+from writer import Writer
 import math
 import copy
 
@@ -10,6 +12,7 @@ class Tester:
     def __init__(self, trainer: Trainer):
         self.trainer = trainer
         self.tracer = dict()
+        self.metrics = Metrics()
         self.lineCursor = 0
         self.correct = 0
         self.wrong = 0
@@ -85,6 +88,7 @@ class Tester:
         # (tweet id, most likely class, score of the most likely class, correctness label)
         self.tracer[atLine] = [line[0], classifiedLan,
                                score,  line[2], correctness]
+        self.metrics.update(line[2], classifiedLan)
 
     def getNextLinesString(self, numOfLines: int = 1):
         content = ""
@@ -111,10 +115,18 @@ class Tester:
     def resetTraceCursor(self, atLine: int = 0):
         self.lineCursor = atLine
 
-    # generate file name
-    def generateFileName(self):
+    # generate trace file name
+    def generateTraceFileName(self):
         filename = ""
         filename += 'trace_' + str(self.trainer.getV())
+        filename += '_' + str(self.trainer.getN())
+        filename += '_' + str(self.trainer.getDelta()) + '.txt'
+        return filename
+
+    # generate evaluation file name
+    def generateEvalFileName(self):
+        filename = ""
+        filename += 'eval_' + str(self.trainer.getV())
         filename += '_' + str(self.trainer.getN())
         filename += '_' + str(self.trainer.getDelta()) + '.txt'
         return filename
@@ -127,3 +139,57 @@ class Tester:
 
     def getAccuracy(self):
         return str((self.correct)/(self.correct + self.wrong) * 100) + '%'
+
+    # do analyze after done test
+    def analyze(self):
+        self.metrics.analyze()
+
+    # get formated str from result pack
+    def getFormated(self, pack, key1: str, key2: str = ""):
+        if(key2 != ""):
+            value = pack[key1][key2]
+        else:
+            value = pack[key1]
+        if(type(value) is str):
+            return value
+        else:
+            return "{:1.4f}".format(value)
+
+    # return formated analysis result in str
+    def getAnalysisResult(self):
+        outStr = ""
+        self.analyze()
+        result = self.metrics.getAnalysisResult()
+        outStr += "{:1.4f}".format(result["accuracy"]) + "\n"
+        precision = ""
+        recall = ""
+        f1 = ""
+        keys = {"eu", "ca", "gl", "es", "en", "pt"}
+        tab = "\t"
+        for key in keys:
+            precision += self.getFormated(result, "precision", key) + tab
+            recall += self.getFormated(result, "recall", key) + tab
+            f1 += self.getFormated(result, "f1Measure", key) + tab
+
+        outStr += precision + "\n"
+        outStr += recall + "\n"
+        outStr += f1 + "\n"
+
+        outStr += self.getFormated(result, "macroF1") + tab
+        outStr += self.getFormated(result, "weightedAverageF1") + tab
+
+        return outStr
+
+    # output result
+    def dumpResult(self):
+        # dump trace data
+        writer = Writer(self.generateTraceFileName())
+        self.resetTraceCursor()
+
+        writer.overwrite(self.getNextLinesString(800))
+        while(self.getLineCursorPos() < self.getTotalLineSize()):
+            writer.writeAtEOF(self.getNextLinesString(800))
+
+        # dump analysis result data
+        writer = Writer(self.generateEvalFileName())
+        writer.overwrite(self.getAnalysisResult())

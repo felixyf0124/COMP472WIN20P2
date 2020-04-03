@@ -2,35 +2,32 @@
 class Metrics:
 
     def __init__(self):
-        self.statistics = dict()
-        self.statistics["eu"] = self.instMetricEntry()
-        self.statistics["ca"] = self.instMetricEntry()
-        self.statistics["gl"] = self.instMetricEntry()
-        self.statistics["es"] = self.instMetricEntry()
-        self.statistics["en"] = self.instMetricEntry()
-        self.statistics["pt"] = self.instMetricEntry()
+        self.statistics = self.instMetricEntry()
         self.correct = 0
         self.wrong = 0
         self.analysis = dict()
 
+    # instancing a metric entry
     def instMetricEntry(self):
         entry = dict()
-        entry["TP"] = 0  # true positive
-        entry["FP"] = 0  # false positive
-        entry["FN"] = 0  # false negative
-        entry["actualTotal"] = 0
+        keys = {"eu", "ca", "gl", "es", "en", "pt"}
+        # detected language
+        for detected in keys:
+            entry[detected] = dict()
+            # target language
+            for target in keys:
+                entry[detected][target] = 0
         return entry
 
-    def update(self, targetLan: str, detectedLan: str):
+    # update metrics statistical data table
+    def update(self, detectedLan: str, targetLan: str):
+        self.statistics[detectedLan][targetLan] += 1
         if(targetLan == detectedLan):
-            self.statistics[targetLan]["TP"] += 1
             self.correct += 1
         else:
-            self.statistics[targetLan]["FN"] += 1
-            self.statistics[detectedLan]["FP"] += 1
             self.wrong += 1
-        self.statistics[targetLan]["actualTotal"] += 1
 
+    # do analyze
     def analyze(self):
         self.analysis["accuracy"] = self.correct / (self.correct+self.wrong)
         self.analysis["precision"] = dict()
@@ -45,47 +42,73 @@ class Metrics:
         self.analysis["macroF1"] = self.getMacroF1()
         self.analysis["weightedAverageF1"] = self.getWeightedAverageF1()
 
-    # calculate and return precision for specific language
-
+    # calculate and return precision for specific language class
     def getPrecision(self, language: str):
-        tp = self.statistics[language]["TP"]
-        fp = self.statistics[language]["FP"]
-        precision = tp / (tp + fp)
+        tp = self.statistics[language][language]
+        keys = {"eu", "ca", "gl", "es", "en", "pt"}
+        predictTotal = 0
+        for key in keys:
+            predictTotal += self.statistics[language][key]
+        if(predictTotal != 0):
+            precision = tp / predictTotal
+        else:
+            precision = str(tp) + "/0"
         return precision
 
     # calculate and return recall for specific language
     def getRecall(self, language: str):
-        tp = self.statistics[language]["TP"]
-        fn = self.statistics[language]["FN"]
-        recall = tp / (tp + fn)
+        tp = self.statistics[language][language]
+        keys = {"eu", "ca", "gl", "es", "en", "pt"}
+        actualTotal = 0
+        for key in keys:
+            actualTotal += self.statistics[key][language]
+        if(actualTotal != 0):
+            recall = tp / actualTotal
+        else:
+            recall = str(tp) + "/0"
         return recall
 
     # calculate and return F1-measure for specific language
     def getF1Measure(self, language: str, precision=None, recall=None):
-        if(precision != None & recall != None):
+        if(precision != None) & (recall != None):
             p = precision
             r = recall
         else:
             p = self.getPrecision(language)
             r = self.getRecall(language)
-        f_measure = 2*p*r/(p+r)
+
+        if(type(p) is str) | (type(r) is str):
+            f_measure = "None"
+        else:
+            f_measure = 2*p*r/(p+r)
         return f_measure
 
     # return macro F1 average
     def getMacroF1(self):
-        total = 0
+        total = 0.0
+        count = 0
         for key in self.analysis["f1Measure"]:
-            total += self.analysis["f1Measure"][key]
-        average = total/len(self.analysis["f1Measure"])
+            if(type(self.analysis["f1Measure"][key]) is float):
+                total += self.analysis["f1Measure"][key]
+                count += 1
+            else:
+                return "None"
+        average = total/count
         return average
 
     # return F1 weighted average
     def getWeightedAverageF1(self):
         total = 0
-        for key in self.analysis["f1Measure"]:
-            f1 = self.analysis["f1Measure"][key]
-            actualTotal = self.statistics[key]["actualTotal"]
-            total += f1 * actualTotal
+        keys = {"eu", "ca", "gl", "es", "en", "pt"}
+        for each in self.analysis["f1Measure"]:
+            f1 = self.analysis["f1Measure"][each]
+            if(type(f1) is float):
+                actualTotal = 0
+                for key in keys:
+                    actualTotal += self.statistics[key][each]
+                total += f1 * actualTotal
+            else:
+                return "None"
         weightedAve = total/(self.correct + self.wrong)
         return weightedAve
 

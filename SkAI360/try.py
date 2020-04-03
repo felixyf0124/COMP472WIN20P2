@@ -93,11 +93,13 @@ while(line != None):
 # print(math.pow(10, math.log10(10)))
 # print(10**scores[0][1])
 
-writer = Writer(tester.generateFileName())
-tester.resetTraceCursor()
+# writer = Writer(tester.generateFileName())
+# tester.resetTraceCursor()
 
-writer.overwrite(tester.getNextLinesString(200))
-while(tester.getLineCursorPos() < tester.getTotalLineSize()):
-    writer.writeAtEOF(tester.getNextLinesString(200))
+# writer.overwrite(tester.getNextLinesString(200))
+# while(tester.getLineCursorPos() < tester.getTotalLineSize()):
+#     writer.writeAtEOF(tester.getNextLinesString(200))
 
-print(tester.getAccuracy())
+# print(tester.getAccuracy())
+
+tester.dumpResult()
