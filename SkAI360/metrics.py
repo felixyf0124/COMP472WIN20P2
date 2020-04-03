@@ -79,6 +79,8 @@ class Metrics:
 
         if(type(p) is str) | (type(r) is str):
             f_measure = "None"
+        elif(p+r == 0):
+            f_measure = "None"
         else:
             f_measure = 2*p*r/(p+r)
         return f_measure

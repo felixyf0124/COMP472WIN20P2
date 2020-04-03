@@ -40,8 +40,8 @@ testingFile = "dataset/test-tweets-given.txt"
 verbose = False
 
 loader = ld(trainingFile, testingFile, verbose)
-loader.loadTrainingData(testingFile)
-trainer = Trainer(2, 3, 1e-80)
+# loader.loadTrainingData(testingFile)
+trainer = Trainer(2, 3, 1e-50)
 loader.resetLineCursor()
 
 line = loader.getNextLineInTrainingData()

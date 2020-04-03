@@ -14,6 +14,7 @@ class Tester:
         self.tracer = dict()
         self.metrics = Metrics()
         self.lineCursor = 0
+
         self.correct = 0
         self.wrong = 0
 
@@ -40,10 +41,6 @@ class Tester:
                     popList.append(subStr)
         return popList
 
-    # P(A|B) = P(A∩B)/P(B)
-    def naiveBayes(self, anb, b):
-        return anb/b
-
     # get score of specific language
     def getScore(self, language: str, lineStr: str):
         nonAppear = 0
@@ -65,7 +62,9 @@ class Tester:
             ttlSoomthed = (self.trainer.getTableSize(language)+1) * smoothDelta
         else:
             ttlSoomthed = (self.trainer.getTableSize(language)) * smoothDelta
-        score = 0.0
+        # start with prior
+        score = math.log10(self.trainer.getDocCount(
+            language)/self.trainer.getTotalDocCount())
         for each in letterList:
             score += math.log10((each + smoothDelta)/ttlSoomthed)
 
@@ -164,7 +163,7 @@ class Tester:
         precision = ""
         recall = ""
         f1 = ""
-        keys = {"eu", "ca", "gl", "es", "en", "pt"}
+        keys = ["eu", "ca", "gl", "es", "en", "pt"]
         tab = "\t"
         for key in keys:
             precision += self.getFormated(result, "precision", key) + tab

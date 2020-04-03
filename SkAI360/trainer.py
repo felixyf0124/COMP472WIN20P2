@@ -35,6 +35,11 @@ class Trainer:
         self.enTtlCount = 0
         self.ptTtlCount = 0
 
+        keys = {"eu", "ca", "gl", "es", "en", "pt"}
+        self.docCounts = dict()
+        for key in keys:
+            self.docCounts[key] = 0
+
     # return V
     def getV(self):
         return self.V
@@ -94,6 +99,7 @@ class Trainer:
         self.ptTtlCount += 1
 
     def feedLineInfo(self, language: str, lineStr: str):
+        self.docCounts[language] += 1
         if(self.V == 0):
             lineStr = lineStr.lower()
         filteredDateList = self.__popFeedList(lineStr)
@@ -177,7 +183,7 @@ class Trainer:
         if(language == "pt"):
             return self.getFromPT(key)
 
-    # get total count for specific language
+    # get total count feed for specific language
     def getTTLCount(self, language: str):
         if(language == "eu"):
             return self.euTtlCount
@@ -192,6 +198,7 @@ class Trainer:
         if(language == "pt"):
             return self.ptTtlCount
 
+    # get table size for specific language
     def getTableSize(self, language: str):
         if(language == "eu"):
             return self.euTab.getTableSize()
@@ -205,3 +212,14 @@ class Trainer:
             return self.enTab.getTableSize()
         if(language == "pt"):
             return self.ptTab.getTableSize()
+
+    # get doc count at specific language
+    def getDocCount(self, language: str):
+        return self.docCounts[language]
+
+    # get total doc count
+    def getTotalDocCount(self):
+        ttlDocCount = 0
+        for key in self.docCounts:
+            ttlDocCount += self.docCounts[key]
+        return ttlDocCount
