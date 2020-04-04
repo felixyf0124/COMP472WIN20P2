@@ -9,13 +9,12 @@ import copy
 
 class Tester:
 
-    def __init__(self, trainer: Trainer, ignoreSpace: bool):
+    def __init__(self, trainer: Trainer):
         self.trainer = trainer
-        self.ignoreSpace = ignoreSpace
         self.tracer = dict()
         self.metrics = Metrics()
         self.lineCursor = 0
-
+        self.e = self.trainer.getE()
         self.correct = 0
         self.wrong = 0
 
@@ -46,10 +45,10 @@ class Tester:
         n = self.trainer.getN()
         V = self.trainer.getV()
         if(len(lineStr) >= n):
-            verifier = vv(self.ignoreSpace)
+            verifier = vv()
             for i in range(len(lineStr)-n):
                 subStr = lineStr[i:i+n]
-                if(verifier.verify(subStr, V)):
+                if(verifier.verify(subStr, V, self.e)):
                     popList.append(subStr)
         return popList
 

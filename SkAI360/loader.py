@@ -4,7 +4,7 @@ import os
 class Loader:
     # trainingPath: training path file
     # testingPath: testing path file
-    def __init__(self, trainingPath: str, testingPath: str, verbose: bool, ignoreSpace: bool):
+    def __init__(self, verbose: bool = False):
         self.verbose = verbose
         self.trainingPath = "./trainingDataSet/"
         self.testingPath = "./testingDataSet/"

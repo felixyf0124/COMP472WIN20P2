@@ -6,14 +6,15 @@ class NGram:
     # constructor
     # :param V: 0,1,2
     # :param n: 1,2,3
-    def __init__(self, V: int, n: int, delta: float, ignoreSpace: bool):
+    # :param e: 0,1     extra consideration
+    def __init__(self, V: int, n: int, delta: float, e: int = 0):
         if((V < 0) & (V > 2)):
             raise Exception("Invalid param V: " + str(V) + "\n")
 
         self.V = V
         self.n = n
         self.delta = delta
-        self.ignoreSpace = ignoreSpace
+        self.e = e
         self.table = dict()
         if(self.n == 1):
             self.__nGram1()
@@ -32,11 +33,11 @@ class NGram:
     # generat 1-gram table in 1 level dict
     def __nGram1(self):
         if(self.V == 0):
-            vocabSet = vv(self.ignoreSpace).vocabSet[0]
+            vocabSet = vv().vocabSet[0]
             for x in vocabSet:
                 self.table[x] = 0
         if(self.V == 1):
-            vocabSet = vv(self.ignoreSpace).vocabSet[1]
+            vocabSet = vv().vocabSet[1]
             for x in vocabSet:
                 self.table[x] = 0
 
@@ -44,14 +45,12 @@ class NGram:
     # generat 2-gram table in 2 level dict
     def __nGram2(self):
         if(self.V == 0):
-            vocabSet = vv(self.ignoreSpace).vocabSet[0]
-            for x in vocabSet:
-                self.table[x] = dict()
-                for y in vocabSet:
-                    self.table[x][y] = 0
-
+            vocabSet = vv().getVocabSet(0)
         if(self.V == 1):  # initial for v == 1
-            vocabSet = vv(self.ignoreSpace).vocabSet[1]
+            vocabSet = vv().getVocabSet(1)
+        if(self.V == 0) | (self.V == 1):
+            if(self.e == 1):  # BYOM
+                vocabSet.add(" ")
             for x in vocabSet:
                 self.table[x] = dict()
                 for y in vocabSet:
@@ -61,22 +60,49 @@ class NGram:
     # generat 3-gram table in 3 level dict
     def __nGram3(self):
         if(self.V == 0):
-            vocabSet = vv(self.ignoreSpace).vocabSet[0]
-            for x in vocabSet:
-                self.table[x] = dict()
-                for y in vocabSet:
-                    self.table[x][y] = dict()
-                    for z in vocabSet:
-                        self.table[x][y][z] = 0
+            vocabSet = vv().getVocabSet(0)
 
         if(self.V == 1):  # initial for v == 1
-            vocabSet = vv(self.ignoreSpace).vocabSet[1]
-            for x in vocabSet:
-                self.table[x] = dict()
-                for y in vocabSet:
-                    self.table[x][y] = dict()
-                    for z in vocabSet:
-                        self.table[x][y][z] = 0
+            vocabSet = vv().getVocabSet(1)
+        if(self.V == 0) | (self.V == 1):
+
+            if(self.e == 0):  # BYOM
+                for x in vocabSet:
+                    self.table[x] = dict()
+                    for y in vocabSet:
+                        self.table[x][y] = dict()
+                        for z in vocabSet:
+                            self.table[x][y][z] = 0
+
+            if(self.e == 1):  # BYOM
+                vocabSet.add(" ")
+                isLastCharSpace = False
+                for x in vocabSet:
+                    self.table[x] = dict()
+                    if(x == " "):
+                        isLastCharSpace = True
+                    else:
+                        isLastCharSpace = False
+                    for y in vocabSet:
+                        if not (isLastCharSpace & (y == " ")):
+                            self.table[x][y] = dict()
+                            if(x == " "):
+                                isLastCharSpace = True
+                            else:
+                                isLastCharSpace = False
+                            for z in vocabSet:
+                                if not (isLastCharSpace & (y == " ")):
+                                    self.table[x][y][z] = 0
+    # replace unicode space
+
+    def __uSpaceReplace(self, chars: str):
+        stri = ""
+        for c in chars:
+            if c.isspace():
+                stri += " "
+            else:
+                stri += c
+        return stri
 
     # private function
     # feed 1-gram
@@ -93,6 +119,9 @@ class NGram:
     def __feed2Gram(self, subStr: str):
         # v = 2 and the element is not initialized
         # then initalize
+
+        # replace unicode space (BYOM)
+        subStr = self.__uSpaceReplace(subStr)
         if(self.V == 2):
             if(subStr[0] not in self.table):
                 self.table[subStr[0]] = dict()
@@ -106,6 +135,9 @@ class NGram:
     def __feed3Gram(self, subStr: str):
         # v = 2 and the element is not initialized
         # then initalize
+
+        # replace unicode space (BYOM)
+        subStr = self.__uSpaceReplace(subStr)
         if(self.V == 2):
             if(subStr[0] not in self.table):
                 self.table[subStr[0]] = dict()

@@ -8,7 +8,8 @@ class Trainer:
     # V = vocabularyLevel 2: Distinguish up and low cases and use all characters accepted by the built-in isalpha() method
     # n = nGramSize: 1 = character unigrams, 2 = character bigrams, 3 = character trigrams
     # delta = smoothingValue: real number representing the smoothing value
-    def __init__(self, V: int, n: int, delta: float, verbose: bool, ignoreSpace: bool):
+    # e = extra consideration (BYOM)
+    def __init__(self, V: int, n: int, delta: float, verbose: bool, e: int):
         if((V < 0) & (V > 2)):
             raise Exception("Invalid param V: " +
                             str(V) + "\n")
@@ -23,13 +24,13 @@ class Trainer:
         self.tab = dict()
         self.totalCount = dict()
         for key in keys:
-            self.tab[key] = ng(V, n, delta, ignoreSpace)
+            self.tab[key] = ng(V, n, delta, e)
             self.totalCount[key] = 0
         # self.tab = ng(V, n, delta)  # total base
         self.totalCount["all"] = 0
 
         self.verbose = verbose
-        self.ignoreSpace = ignoreSpace
+        self.e = e
 
         self.docCounts = dict()
         for key in keys:
@@ -47,15 +48,19 @@ class Trainer:
     def getDelta(self):
         return self.delta
 
+    # return e
+    def getE(self):
+        return self.e
+
     # return a list of filtered data from the line str
     def __popFeedList(self, lineStr):
         popList = []
         if(len(lineStr) >= self.n):
-            verifier = vv(self.ignoreSpace)
+            verifier = vv()
             for i in range(len(lineStr)-self.n):
                 subStr = lineStr[i:i+self.n]
                 # print(subStr)
-                if(verifier.verify(subStr, self.V)):
+                if(verifier.verify(subStr, self.V, self.e)):
                     popList.append(subStr)
         return popList
 

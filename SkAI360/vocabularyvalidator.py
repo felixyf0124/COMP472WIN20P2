@@ -3,8 +3,7 @@ import string
 
 class VocabularyValidator:
 
-    def __init__(self, ignoreSpace: bool):
-        self.ignoreSpace = ignoreSpace
+    def __init__(self):
         self.vocabSet = dict()
         self.__addVocabSet0()
         self.__addVocabSet1()
@@ -41,20 +40,42 @@ class VocabularyValidator:
         else:
             return False
 
+    # verify with extra consideration
+    def verifyE(self, vocabulary: str, type: int):
+        v = vocabulary
+        isLastCharSpace = False
+        for each in v:
+            # check non-continuous space
+            if (isLastCharSpace & each.isspace()):
+                return False
+            if(type == 0):
+                if not (self.verify0(each) | each.isspace()):
+                    return False
+            if(type == 1):
+                if not (self.verify1(each) | each.isspace()):
+                    return False
+            if(type == 2):
+                if not (self.verify2(each) | each.isspace()):
+                    return False
+
+            if (each.isspace()):
+                isLastCharSpace = True
+            else:
+                isLastCharSpace = False
+        return True
+
     # verify vocabulary type among the requirement types
     # return boolean if match the speicified type
-    def verify(self, vocabulary: str, type: int):
-        if(self.ignoreSpace):
-            # print(vocabulary)
-            # print((' ' in vocabulary) == True)
-            if((' ' in vocabulary) == True):
-                return False
-        if(type == 0):
-            return self.verify0(vocabulary)
-        if(type == 1):
-            return self.verify1(vocabulary)
-        if(type == 2):
-            return self.verify2(vocabulary)
+    def verify(self, vocabulary: str, vType: int, extra: int = 0):
+        if(extra == 1) & (len(vocabulary) > 1):
+            return self.verifyE(vocabulary, vType)
+        else:
+            if(vType == 0):
+                return self.verify0(vocabulary)
+            if(vType == 1):
+                return self.verify1(vocabulary)
+            if(vType == 2):
+                return self.verify2(vocabulary)
 
     # add type 0 vocab set into dictionary
     def __addVocabSet0(self):
@@ -65,3 +86,8 @@ class VocabularyValidator:
     def __addVocabSet1(self):
         vocabSet = set(string.ascii_letters)
         self.vocabSet[1] = vocabSet
+
+    # return vocab. set
+    def getVocabSet(self, id: int):
+        if(id in self.vocabSet):
+            return self.vocabSet[id]
