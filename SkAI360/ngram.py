@@ -173,12 +173,34 @@ class NGram:
         if(self.n == 2):
             size = 0
             for x in self.table:
-                size += len(x)
+                size += len(self.table[x])
             return size
         if(self.n == 3):
             size = 0
             for x in self.table:
-                for y in x:
-                    size += len(y)
+                for y in self.table[x]:
+                    size += len(self.table[x][y])
+
+            return size
+
+    # get total feed size
+    def getTotalFeedSize(self):
+        if(self.n == 1):
+            size = 0
+            for x in self.table:
+                size += self.table[x]
+            return size
+        if(self.n == 2):
+            size = 0
+            for x in self.table:
+                for y in self.table[x]:
+                    size += len(self.table[x][y])
+            return size
+        if(self.n == 3):
+            size = 0
+            for x in self.table:
+                for y in self.table[x]:
+                    for z in self.table[x][y]:
+                        size += len(self.table[x][y][z])
 
             return size

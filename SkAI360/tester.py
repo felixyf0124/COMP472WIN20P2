@@ -18,6 +18,11 @@ class Tester:
         self.correct = 0
         self.wrong = 0
 
+        self.verbose = trainer.verbose
+        # if(self.verbose):
+        #     # print(self.trainer.tab.table)
+
+    # get all
     def classify(self, lineStr: str):
         scores = []
         scores.append(["eu", self.getScore("eu", lineStr)])
@@ -26,7 +31,12 @@ class Tester:
         scores.append(["es", self.getScore("es", lineStr)])
         scores.append(["en", self.getScore("en", lineStr)])
         scores.append(["pt", self.getScore("pt", lineStr)])
-        return sorted(scores, key=lambda score: score[1], reverse=True)
+        scores = sorted(scores, key=lambda score: score[1], reverse=True)
+        # if(self.verbose):
+        #     print('SCORES')
+        #     for s in scores:
+
+        return scores
 
     # return a list of chopped substr
     def __popChunkList(self, lineStr: str):
@@ -62,15 +72,29 @@ class Tester:
             ttlSoomthed = (self.trainer.getTableSize(language)+1) * smoothDelta
         else:
             ttlSoomthed = (self.trainer.getTableSize(language)) * smoothDelta
+
+        totalFeed = self.trainer.getTotalCount(language)
+
+        # totalFeedVerifier = self.trainer.getTotalCount(language)
+        # if(totalFeed != totalFeedVerifier):
+        #     error = "Error: two total count are not equal\n"
+        #     error += "self.trainer.getTotalCount: " + str(totalFeed) + "\n"
+        #     error += "self.trainer.getDocCount: " + \
+        #         str(totalFeedVerifier) + "\n"
+        #     raise Exception(error)
+
         # start with prior
         score = math.log10(self.trainer.getDocCount(
             language)/self.trainer.getTotalDocCount())
-        for each in letterList:
-            score += math.log10((each + smoothDelta)/ttlSoomthed)
 
-        if(nonAppear > 0):
+        for each in letterList:
+            if(each != 0):
+                score += math.log10((each + smoothDelta) /
+                                    (totalFeed + ttlSoomthed))
+
+        if(nonAppear > 0) & (smoothDelta > 0):
             for x in range(nonAppear):
-                score += math.log10(smoothDelta/ttlSoomthed)
+                score += math.log10(smoothDelta/(totalFeed + ttlSoomthed))
         return score
 
     def doTestLine(self, line: [], atLine: int):
