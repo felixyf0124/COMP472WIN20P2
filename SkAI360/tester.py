@@ -14,10 +14,15 @@ class Tester:
         self.tracer = dict()
         self.metrics = Metrics()
         self.lineCursor = 0
-
+        self.e = self.trainer.getE()
         self.correct = 0
         self.wrong = 0
 
+        self.verbose = trainer.verbose
+        # if(self.verbose):
+        #     # print(self.trainer.tab.table)
+
+    # get all
     def classify(self, lineStr: str):
         scores = []
         scores.append(["eu", self.getScore("eu", lineStr)])
@@ -26,7 +31,13 @@ class Tester:
         scores.append(["es", self.getScore("es", lineStr)])
         scores.append(["en", self.getScore("en", lineStr)])
         scores.append(["pt", self.getScore("pt", lineStr)])
-        return sorted(scores, key=lambda score: score[1], reverse=True)
+        scores = sorted(scores, key=lambda score: score[1], reverse=True)
+        # print(scores)
+        # if(self.verbose):
+        #     print('SCORES')
+        #     for s in scores:
+
+        return scores
 
     # return a list of chopped substr
     def __popChunkList(self, lineStr: str):
@@ -37,7 +48,7 @@ class Tester:
             verifier = vv()
             for i in range(len(lineStr)-n):
                 subStr = lineStr[i:i+n]
-                if(verifier.verify(subStr, V)):
+                if(verifier.verify(subStr, V, self.e)):
                     popList.append(subStr)
         return popList
 
@@ -59,18 +70,26 @@ class Tester:
         # print(letterList)
         # nonAppear = 0
         if(nonAppear > 0):
-            ttlSoomthed = (self.trainer.getTableSize(language)+1) * smoothDelta
+            ttlSoomthed = (self.trainer.getTableSize(
+                language)+1-self.trainer.getNonAppearTotalEntry(language)) * smoothDelta
         else:
-            ttlSoomthed = (self.trainer.getTableSize(language)) * smoothDelta
+            ttlSoomthed = (self.trainer.getTableSize(
+                language)-self.trainer.getNonAppearTotalEntry(language)) * smoothDelta
+
+        totalFeed = self.trainer.getTotalCount(language)
+
         # start with prior
         score = math.log10(self.trainer.getDocCount(
             language)/self.trainer.getTotalDocCount())
-        for each in letterList:
-            score += math.log10((each + smoothDelta)/ttlSoomthed)
 
-        if(nonAppear > 0):
+        for each in letterList:
+            if(each != 0):
+                score += math.log10((each + smoothDelta) /
+                                    (totalFeed + ttlSoomthed))
+
+        if(nonAppear > 0) & (smoothDelta > 0):
             for x in range(nonAppear):
-                score += math.log10(smoothDelta/ttlSoomthed)
+                score += math.log10(smoothDelta/(totalFeed + ttlSoomthed))
         return score
 
     def doTestLine(self, line: [], atLine: int):
@@ -137,11 +156,16 @@ class Tester:
         return self.lineCursor
 
     def getAccuracy(self):
-        return str((self.correct)/(self.correct + self.wrong) * 100) + '%'
+        accuracy = self.metrics.getAccuracy()
+        if(accuracy != None):
+            return "{:3.2f}".format(accuracy*100) + " %"
+        else:
+            return accuracy
 
     # do analyze after done test
     def analyze(self):
-        self.metrics.analyze()
+        if(len(self.metrics.analysis) == 0):
+            self.metrics.analyze()
 
     # get formated str from result pack
     def getFormated(self, pack, key1: str, key2: str = ""):

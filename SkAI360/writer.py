@@ -1,6 +1,11 @@
+import os
+
+
 class Writer:
     def __init__(self, filename):
-        self.filename = filename
+        self.filename = 'output/' + filename
+        # if no dirctory then auto create
+        os.makedirs(os.path.dirname(self.filename), exist_ok=True)
 
     # overwrite content
     def overwrite(self, content):

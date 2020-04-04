@@ -1,18 +1,37 @@
+import os
+
+
 class Loader:
     # trainingPath: training path file
     # testingPath: testing path file
-    def __init__(self, trainingPath: str, testingPath: str, verbose: bool = False):
+    def __init__(self, verbose: bool = False):
         self.verbose = verbose
+        self.trainingPath = "./trainingDataSet/"
+        self.testingPath = "./testingDataSet/"
+        self.listOfTrainingFiles = os.listdir(self.trainingPath)
+        self.listOfTestingFiles = os.listdir(self.testingPath)
+
         self.trainingData = dict()
-        self.loadTrainingData(trainingPath, verbose)
+        for each in self.listOfTrainingFiles:
+            path = self.trainingPath + each
+            if(os.path.isfile(path)):
+                self.loadTrainingData(path, verbose)
 
         self.testingData = dict()
-        self.loadTestingData(testingPath, verbose)
+        count = 0
+        for each in self.listOfTestingFiles:
+            if count > 1:
+                break
+            path = self.testingPath + each
+            if(os.path.isfile(path)):
+                self.loadTestingData(path, verbose)
+                count += 1
 
         self.lineCursor = 0
 
     # load training data into training data dict (cumulative load)
     def loadTrainingData(self, trainingPath: str, verbose: bool = False):
+
         trainingFile = open(trainingPath, "r", encoding="utf8")
         lineNum = len(self.trainingData)
         for line in trainingFile:

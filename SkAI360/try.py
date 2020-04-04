@@ -35,71 +35,69 @@ from writer import Writer
 #     i+=1
 #     print(i)
 
-trainingFile = "dataset/training-tweets.txt"
-testingFile = "dataset/test-tweets-given.txt"
 verbose = False
+# vParam = [2]
+# nParam = [1, 2, 3]
+# deltaParam = [0]
+# custom PARAMs
+extra = 1
+# demo PARAMs
+demoParam = [[0, 1, 0], [1, 2, 0.5], [1, 3, 1], [2, 2, 0.3]]
+# demoParam = [[1, 3, 1]]
 
-loader = ld(trainingFile, testingFile, verbose)
-# loader.loadTrainingData(testingFile)
-trainer = Trainer(2, 3, 1e-50)
-loader.resetLineCursor()
+demoParam.append([2, 3, 0.3])
 
-line = loader.getNextLineInTrainingData()
-while (line != None):
-    # print(line)
-    trainer.feedLineInfo(line[2], line[3])
+for param in demoParam:
+    print('vocabulary =', param[0], 'ngram =', param[1],
+          'delta =', param[2], 'extra =', extra)
+    loader = ld(verbose)
+    # loader.loadTrainingData(testingFile)
+    trainer = Trainer(param[0], param[1], param[2], verbose, extra)
+    loader.resetLineCursor()
+
     line = loader.getNextLineInTrainingData()
+    # trainer.feedLineInfo(line[2], line[3])
 
-# line = loader.getNextLineInTrainingData()
-# print(trainer.euTab.table, 'eu')
-# print(trainer.caTab.table, 'ca')
-# print(trainer.glTab.table, 'gl')
-# print(trainer.esTab.table, 'es')
-# print(trainer.enTab.table, 'en')
-# print(trainer.ptTab.table, 'pt')
-# while(line != None):
-#     trainer.feedLineInfo(line[2], line[3])
-#     line = loader.getNextLineInTrainingData()
+    while (line != None):
+        # print(line)
+        trainer.feedLineInfo(line[2], line[3])
+        line = loader.getNextLineInTrainingData()
 
+    # print(trainer.getTableSize("es"))
 
-# print(trainer.tab.table)
+    # line = loader.getNextLineInTrainingData()
+    # print(trainer.euTab.table, 'eu')
+    # print(trainer.caTab.table, 'ca')
+    # print(trainer.glTab.table, 'gl')
+    # print(trainer.esTab.table, 'es')
+    # print(trainer.enTab.table, 'en')
+    # print(trainer.ptTab.table, 'pt')
+    # while(line != None):
+    #     trainer.feedLineInfo(line[2], line[3])
+    #     line = loader.getNextLineInTrainingData()
 
-# print(trainer.euTab.table)
-# print(trainer.caTab.table)
-# print(trainer.glTab.table)
-# print(trainer.esTab.table)
-# print(trainer.enTab.table)
-# print(trainer.ptTab.table)
+    # print(trainer.tab.table)
 
-# print(math.log10(10))
+    # print(trainer.euTab.table)
+    # print(trainer.caTab.table)
+    # print(trainer.glTab.table)
+    # print(trainer.esTab.table)
+    # print(trainer.enTab.table)
+    # print(trainer.ptTab.table)
 
-tester = Tester(trainer)
+    # print(math.log10(10))
 
-loader.resetLineCursor()
+    tester = Tester(trainer)
 
-line = loader.getNextLineInTestingData()
-# scores = tester.classify(line[3])
-# print(scores)
+    loader.resetLineCursor()
 
-while(line != None):
-    tester.doTestLine(line, loader.getLineCursorPos())
     line = loader.getNextLineInTestingData()
+    # print(tester.classify(line[3]))
 
-# if scores[0][1] > scores[2][1]:
-#     print(0)
-# else:
-#     print(2)
-# print(10**math.log10(10))
-# print(math.pow(10, math.log10(10)))
-# print(10**scores[0][1])
+    while(line != None):
+        tester.doTestLine(line, loader.getLineCursorPos())
+        line = loader.getNextLineInTestingData()
 
-# writer = Writer(tester.generateFileName())
-# tester.resetTraceCursor()
+    print(tester.getAccuracy())
 
-# writer.overwrite(tester.getNextLinesString(200))
-# while(tester.getLineCursorPos() < tester.getTotalLineSize()):
-#     writer.writeAtEOF(tester.getNextLinesString(200))
-
-# print(tester.getAccuracy())
-
-tester.dumpResult()
+    # tester.dumpResult()

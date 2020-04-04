@@ -42,6 +42,12 @@ class Metrics:
         self.analysis["macroF1"] = self.getMacroF1()
         self.analysis["weightedAverageF1"] = self.getWeightedAverageF1()
 
+    # return accuracy
+    def getAccuracy(self):
+        if("accuracy" not in self.analysis):
+            self.analyze()
+        return self.analysis.get("accuracy")
+
     # calculate and return precision for specific language class
     def getPrecision(self, language: str):
         tp = self.statistics[language][language]
