@@ -156,11 +156,16 @@ class Tester:
         return self.lineCursor
 
     def getAccuracy(self):
-        return str((self.correct)/(self.correct + self.wrong) * 100) + '%'
+        accuracy = self.metrics.getAccuracy()
+        if(accuracy != None):
+            return "{:3.2f}".format(accuracy*100) + " %"
+        else:
+            return accuracy
 
     # do analyze after done test
     def analyze(self):
-        self.metrics.analyze()
+        if(len(self.metrics.analysis) == 0):
+            self.metrics.analyze()
 
     # get formated str from result pack
     def getFormated(self, pack, key1: str, key2: str = ""):

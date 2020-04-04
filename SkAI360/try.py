@@ -43,6 +43,8 @@ verbose = False
 # deltaParam = [0]
 demoParam = [[0, 1, 0], [1, 2, 0.5], [1, 3, 1], [2, 2, 0.3]]
 
+demoParam.append([2, 3, 0.3])
+
 for param in demoParam:
     print('vocabulary=', param[0], 'ngram=', param[1], 'delta=', param[2])
     loader = ld(trainingFile, testingFile, verbose)
