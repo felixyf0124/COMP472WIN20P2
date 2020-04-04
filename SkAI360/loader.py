@@ -4,13 +4,12 @@ import os
 class Loader:
     # trainingPath: training path file
     # testingPath: testing path file
-    def __init__(self, trainingPath: str, testingPath: str, verbose: bool = False):
+    def __init__(self, trainingPath: str, testingPath: str, verbose: bool, ignoreSpace: bool):
         self.verbose = verbose
         self.trainingPath = "./trainingDataSet/"
         self.testingPath = "./testingDataSet/"
         self.listOfTrainingFiles = os.listdir(self.trainingPath)
         self.listOfTestingFiles = os.listdir(self.testingPath)
-        # print(listOfTrainingFiles)
 
         self.trainingData = dict()
         for each in self.listOfTrainingFiles:

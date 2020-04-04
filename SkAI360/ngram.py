@@ -6,13 +6,14 @@ class NGram:
     # constructor
     # :param V: 0,1,2
     # :param n: 1,2,3
-    def __init__(self, V: int, n: int, delta: float):
+    def __init__(self, V: int, n: int, delta: float, ignoreSpace: bool):
         if((V < 0) & (V > 2)):
             raise Exception("Invalid param V: " + str(V) + "\n")
 
         self.V = V
         self.n = n
         self.delta = delta
+        self.ignoreSpace = ignoreSpace
         self.table = dict()
         if(self.n == 1):
             self.__nGram1()
@@ -31,11 +32,11 @@ class NGram:
     # generat 1-gram table in 1 level dict
     def __nGram1(self):
         if(self.V == 0):
-            vocabSet = vv().vocabSet[0]
+            vocabSet = vv(self.ignoreSpace).vocabSet[0]
             for x in vocabSet:
                 self.table[x] = 0
         if(self.V == 1):
-            vocabSet = vv().vocabSet[1]
+            vocabSet = vv(self.ignoreSpace).vocabSet[1]
             for x in vocabSet:
                 self.table[x] = 0
 
@@ -43,14 +44,14 @@ class NGram:
     # generat 2-gram table in 2 level dict
     def __nGram2(self):
         if(self.V == 0):
-            vocabSet = vv().vocabSet[0]
+            vocabSet = vv(self.ignoreSpace).vocabSet[0]
             for x in vocabSet:
                 self.table[x] = dict()
                 for y in vocabSet:
                     self.table[x][y] = 0
 
         if(self.V == 1):  # initial for v == 1
-            vocabSet = vv().vocabSet[1]
+            vocabSet = vv(self.ignoreSpace).vocabSet[1]
             for x in vocabSet:
                 self.table[x] = dict()
                 for y in vocabSet:
@@ -60,7 +61,7 @@ class NGram:
     # generat 3-gram table in 3 level dict
     def __nGram3(self):
         if(self.V == 0):
-            vocabSet = vv().vocabSet[0]
+            vocabSet = vv(self.ignoreSpace).vocabSet[0]
             for x in vocabSet:
                 self.table[x] = dict()
                 for y in vocabSet:
@@ -69,7 +70,7 @@ class NGram:
                         self.table[x][y][z] = 0
 
         if(self.V == 1):  # initial for v == 1
-            vocabSet = vv().vocabSet[1]
+            vocabSet = vv(self.ignoreSpace).vocabSet[1]
             for x in vocabSet:
                 self.table[x] = dict()
                 for y in vocabSet:
