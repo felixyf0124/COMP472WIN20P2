@@ -9,8 +9,9 @@ import copy
 
 class Tester:
 
-    def __init__(self, trainer: Trainer):
+    def __init__(self, trainer: Trainer, ignoreSpace: bool):
         self.trainer = trainer
+        self.ignoreSpace = ignoreSpace
         self.tracer = dict()
         self.metrics = Metrics()
         self.lineCursor = 0
@@ -45,7 +46,7 @@ class Tester:
         n = self.trainer.getN()
         V = self.trainer.getV()
         if(len(lineStr) >= n):
-            verifier = vv()
+            verifier = vv(self.ignoreSpace)
             for i in range(len(lineStr)-n):
                 subStr = lineStr[i:i+n]
                 if(verifier.verify(subStr, V)):

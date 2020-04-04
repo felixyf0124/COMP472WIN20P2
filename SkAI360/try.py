@@ -41,13 +41,18 @@ verbose = False
 # vParam = [2]
 # nParam = [1, 2, 3]
 # deltaParam = [0]
+# custom PARAMs
+ignoreSpace = True
+# demo PARAMs
 demoParam = [[0, 1, 0], [1, 2, 0.5], [1, 3, 1], [2, 2, 0.3]]
+# demoParam = [[1, 3, 1]]
 
 for param in demoParam:
-    print('vocabulary=', param[0], 'ngram=', param[1], 'delta=', param[2])
-    loader = ld(trainingFile, testingFile, verbose)
+    print('vocabulary =', param[0], 'ngram =', param[1],
+          'delta =', param[2], 'ignoreSpace =', ignoreSpace)
+    loader = ld(trainingFile, testingFile, verbose, ignoreSpace)
     # loader.loadTrainingData(testingFile)
-    trainer = Trainer(param[0], param[1], param[2], verbose)
+    trainer = Trainer(param[0], param[1], param[2], verbose, ignoreSpace)
     loader.resetLineCursor()
 
     line = loader.getNextLineInTrainingData()
@@ -82,7 +87,7 @@ for param in demoParam:
 
     # print(math.log10(10))
 
-    tester = Tester(trainer)
+    tester = Tester(trainer, ignoreSpace)
 
     loader.resetLineCursor()
 
