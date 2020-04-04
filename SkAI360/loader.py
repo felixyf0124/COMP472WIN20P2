@@ -1,11 +1,20 @@
 class Loader:
     # trainingPath: training path file
     # testingPath: testing path file
-    def __init__(self, trainingPath, testingPath, verbose: bool):
+    def __init__(self, trainingPath: str, testingPath: str, verbose: bool = False):
         self.verbose = verbose
         self.trainingData = dict()
+        self.loadTrainingData(trainingPath, verbose)
+
+        self.testingData = dict()
+        self.loadTestingData(testingPath, verbose)
+
+        self.lineCursor = 0
+
+    # load training data into training data dict (cumulative load)
+    def loadTrainingData(self, trainingPath: str, verbose: bool = False):
         trainingFile = open(trainingPath, "r", encoding="utf8")
-        lineNum = 0
+        lineNum = len(self.trainingData)
         for line in trainingFile:
             line = line.rstrip('\n')
             if(len(line) > 0):
@@ -17,9 +26,11 @@ class Loader:
             print(lineNum)
         trainingFile.close()
 
+    # load testing data into testing data dict (reset dict)
+    def loadTestingData(self, testingPath: str, verbose: bool = False):
         self.testingData = dict()
         testingFile = open(testingPath, "r", encoding="utf8")
-        lineNum = 0
+        lineNum = len(self.testingData)
         for line in testingFile:
             line = line.rstrip('\n')
             if(len(line) > 0):
@@ -30,8 +41,6 @@ class Loader:
             print('Testing Path:')
             print(lineNum)
         testingFile.close()
-
-        self.lineCursor = 0
 
     # reset lineCurser = 0
     def resetLineCursor(self):

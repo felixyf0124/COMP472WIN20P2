@@ -160,11 +160,11 @@ class NGram:
             raise Exception(error)
         else:
             if(self.n == 1):
-                self.__getFrom1Gram(key)
+                return self.__getFrom1Gram(key)
             if(self.n == 2):
-                self.__getFrom2Gram(key)
+                return self.__getFrom2Gram(key)
             if(self.n == 3):
-                self.__getFrom3Gram(key)
+                return self.__getFrom3Gram(key)
 
     # get table size
     def getTableSize(self):

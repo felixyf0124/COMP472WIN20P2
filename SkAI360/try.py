@@ -40,7 +40,8 @@ testingFile = "dataset/test-tweets-given.txt"
 verbose = False
 
 loader = ld(trainingFile, testingFile, verbose)
-trainer = Trainer(2, 3, 0.1)
+# loader.loadTrainingData(testingFile)
+trainer = Trainer(2, 3, 1e-50)
 loader.resetLineCursor()
 
 line = loader.getNextLineInTrainingData()
@@ -77,19 +78,28 @@ tester = Tester(trainer)
 loader.resetLineCursor()
 
 line = loader.getNextLineInTestingData()
+# scores = tester.classify(line[3])
+# print(scores)
+
 while(line != None):
     tester.doTestLine(line, loader.getLineCursorPos())
     line = loader.getNextLineInTestingData()
-# scores = tester.classify(line[3])
+
+# if scores[0][1] > scores[2][1]:
+#     print(0)
+# else:
+#     print(2)
 # print(10**math.log10(10))
 # print(math.pow(10, math.log10(10)))
 # print(10**scores[0][1])
-writer = Writer(tester.generateFileName())
-tester.resetTraceCursor()
 
+# writer = Writer(tester.generateFileName())
+# tester.resetTraceCursor()
 
-writer.overwrite(tester.getNextLinesString(200))
-while(tester.getLineCursorPos() < tester.getTotalLineSize()):
-    writer.writeAtEOF(tester.getNextLinesString(200))
+# writer.overwrite(tester.getNextLinesString(200))
+# while(tester.getLineCursorPos() < tester.getTotalLineSize()):
+#     writer.writeAtEOF(tester.getNextLinesString(200))
 
-print(tester.getAccuracy())
+# print(tester.getAccuracy())
+
+tester.dumpResult()
