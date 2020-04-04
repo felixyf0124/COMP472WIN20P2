@@ -25,6 +25,8 @@ class NGram:
             # but if n ! = 1 or 2 or 3 then invalid input
             raise Exception("Invalid param n: " + str(n) + "\n")
 
+        self.nonAppear = None
+
     # private function
     # generat 1-gram table in 1 level dict
     def __nGram1(self):
@@ -182,6 +184,34 @@ class NGram:
                     size += len(self.table[x][y])
 
             return size
+
+    # get non appear total entry
+    def getNonAppearTotalEntry(self):
+        if(self.nonAppear == None):
+            if(self.n == 1):
+                size = 0
+                for x in self.table:
+                    if(self.table[x] == 0):
+                        size += 1
+                return size
+            if(self.n == 2):
+                size = 0
+                for x in self.table:
+                    for y in self.table[x]:
+                        if(self.table[x][y] == 0):
+                            size += 1
+                return size
+            if(self.n == 3):
+                size = 0
+                for x in self.table:
+                    for y in self.table[x]:
+                        for z in self.table[x][y]:
+                            if(self.table[x][y][z] == 0):
+                                size += 1
+
+            self.nonAppear = size
+
+        return self.nonAppear
 
     # get total feed size
     def getTotalFeedSize(self):

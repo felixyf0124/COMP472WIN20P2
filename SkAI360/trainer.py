@@ -100,3 +100,7 @@ class Trainer:
         for key in self.docCounts:
             ttlDocCount += self.docCounts[key]
         return ttlDocCount
+
+    # get non appear total entry
+    def getNonAppearTotalEntry(self, language):
+        return self.tab[language].getNonAppearTotalEntry()

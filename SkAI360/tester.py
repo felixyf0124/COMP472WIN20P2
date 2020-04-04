@@ -32,6 +32,7 @@ class Tester:
         scores.append(["en", self.getScore("en", lineStr)])
         scores.append(["pt", self.getScore("pt", lineStr)])
         scores = sorted(scores, key=lambda score: score[1], reverse=True)
+        # print(scores)
         # if(self.verbose):
         #     print('SCORES')
         #     for s in scores:
@@ -69,19 +70,13 @@ class Tester:
         # print(letterList)
         # nonAppear = 0
         if(nonAppear > 0):
-            ttlSoomthed = (self.trainer.getTableSize(language)+1) * smoothDelta
+            ttlSoomthed = (self.trainer.getTableSize(
+                language)+1-self.trainer.getNonAppearTotalEntry(language)) * smoothDelta
         else:
-            ttlSoomthed = (self.trainer.getTableSize(language)) * smoothDelta
+            ttlSoomthed = (self.trainer.getTableSize(
+                language)-self.trainer.getNonAppearTotalEntry(language)) * smoothDelta
 
         totalFeed = self.trainer.getTotalCount(language)
-
-        # totalFeedVerifier = self.trainer.getTotalCount(language)
-        # if(totalFeed != totalFeedVerifier):
-        #     error = "Error: two total count are not equal\n"
-        #     error += "self.trainer.getTotalCount: " + str(totalFeed) + "\n"
-        #     error += "self.trainer.getDocCount: " + \
-        #         str(totalFeedVerifier) + "\n"
-        #     raise Exception(error)
 
         # start with prior
         score = math.log10(self.trainer.getDocCount(
