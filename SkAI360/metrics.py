@@ -99,14 +99,15 @@ class Metrics:
             if(type(self.analysis["f1Measure"][key]) is float):
                 total += self.analysis["f1Measure"][key]
                 count += 1
-            else:
-                return "None"
+            # else:
+            #     return "None"
         average = total/count
         return average
 
     # return F1 weighted average
     def getWeightedAverageF1(self):
         total = 0
+        sumActualTotal = 0
         keys = {"eu", "ca", "gl", "es", "en", "pt"}
         for each in self.analysis["f1Measure"]:
             f1 = self.analysis["f1Measure"][each]
@@ -115,9 +116,10 @@ class Metrics:
                 for key in keys:
                     actualTotal += self.statistics[key][each]
                 total += f1 * actualTotal
-            else:
-                return "None"
-        weightedAve = total/(self.correct + self.wrong)
+                sumActualTotal += actualTotal
+            # else:
+            #     return "None"
+        weightedAve = total/sumActualTotal
         return weightedAve
 
     # return analysis result
