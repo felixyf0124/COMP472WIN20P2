@@ -10,10 +10,10 @@ from writer import Writer
 
 # init PARAMs
 verbose = False
-extra = [0, 1]
+extra = [1]
 # demo PARAMs
-# demoParam = [[0, 1, 0], [1, 2, 0.5], [1, 3, 1], [2, 2, 0.3]]
 demoParam = []
+demoParam = [[0, 1, 0], [1, 2, 0.5], [1, 3, 1], [2, 2, 0.3]]
 demoParam.append([2, 2, 0.1])
 demoParam.append([2, 2, 0.01])
 demoParam.append([2, 2, 0.001])
