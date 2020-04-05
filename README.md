@@ -20,3 +20,10 @@ Build a variety of models to identify the language of tweets, and report their p
 Deliverable 2: Apr 20th
 
 Evaluate and analyze the results of the above models on a new test set that will be given to you at demo time. This involves analysis, report writing and an oral presentation.
+
+--------------
+#### to run for given model with given hyper-param sets:
+`python3 main.py`
+
+#### to run for our own model:
+`python3 try.py`

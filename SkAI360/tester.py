@@ -136,17 +136,31 @@ class Tester:
     # generate trace file name
     def generateTraceFileName(self):
         filename = ""
-        filename += 'trace_' + str(self.trainer.getV())
-        filename += '_' + str(self.trainer.getN())
-        filename += '_' + str(self.trainer.getDelta()) + '.txt'
+        if(self.e == 0):
+            filename += 'trace_' + str(self.trainer.getV())
+            filename += '_' + str(self.trainer.getN())
+            filename += '_' + str(self.trainer.getDelta()) + '.txt'
+
+        if(self.e == 1):
+            filename += 'trace_myModel_' + str(self.trainer.getV())
+            filename += '_' + str(self.trainer.getN())
+            filename += '_' + str(self.trainer.getDelta())
+            filename += '_' + str(self.trainer.getE()) + '.txt'
         return filename
 
     # generate evaluation file name
     def generateEvalFileName(self):
         filename = ""
-        filename += 'eval_' + str(self.trainer.getV())
-        filename += '_' + str(self.trainer.getN())
-        filename += '_' + str(self.trainer.getDelta()) + '.txt'
+        if(self.e == 0):
+            filename += 'eval_' + str(self.trainer.getV())
+            filename += '_' + str(self.trainer.getN())
+            filename += '_' + str(self.trainer.getDelta()) + '.txt'
+
+        if(self.e == 1):
+            filename += 'eval_myModel_' + str(self.trainer.getV())
+            filename += '_' + str(self.trainer.getN())
+            filename += '_' + str(self.trainer.getDelta())
+            filename += '_' + str(self.trainer.getE()) + '.txt'
         return filename
 
     def getTotalLineSize(self):

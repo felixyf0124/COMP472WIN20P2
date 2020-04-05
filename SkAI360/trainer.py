@@ -111,3 +111,8 @@ class Trainer:
     # get non appear total entry
     def getNonAppearTotalEntry(self, language):
         return self.tab[language].getNonAppearTotalEntry()
+
+    # fill the rest of tables
+    def fillRestTable(self):
+        for key in self.tab:
+            self.tab[key].fillRestTable()
