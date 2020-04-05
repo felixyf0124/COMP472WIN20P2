@@ -8,96 +8,44 @@ from trainer import Trainer
 from tester import Tester
 from writer import Writer
 
-# vValidator = vv()
-
-# print(vValidator.verify('a?',0))
-# print(vValidator.verify('aA',0))
-# print(vValidator.verify('a_a',0))
-# print(vValidator.verify('_a/?',0))
-# print(vValidator.verify('a?',1))
-# print(vValidator.verify('a_a',1))
-# print(vValidator.verify('AazB',1))
-# print(vValidator.verify('é', 1))
-# print(vValidator.verify('a_a',2))
-# print(vValidator.verify('_a/?',2))
-# print('A2/'.lower())
-
-# ng1 = NGram(2, 3, 1)
-
-# ng1.feed("abc")
-# ng1.feed("abc")
-# ng1.feed("ayé")
-
-# print(ng1.table)
-# i = 0
-# for each in vValidator.vocabSet[1]:
-#     print(each)
-#     i+=1
-#     print(i)
-
+# init PARAMs
 verbose = False
-# vParam = [2]
-# nParam = [1, 2, 3]
-# deltaParam = [0]
-# custom PARAMs
-extra = 1
+extra = [0, 1]
 # demo PARAMs
-demoParam = [[0, 1, 0], [1, 2, 0.5], [1, 3, 1], [2, 2, 0.3]]
-# demoParam = [[1, 3, 1]]
+# demoParam = [[0, 1, 0], [1, 2, 0.5], [1, 3, 1], [2, 2, 0.3]]
+demoParam = []
+demoParam.append([2, 2, 0.1])
+demoParam.append([2, 2, 0.01])
+demoParam.append([2, 2, 0.001])
+demoParam.append([2, 3, 0.1])
+demoParam.append([2, 3, 0.01])
+demoParam.append([2, 3, 0.001])
 
-demoParam.append([2, 3, 0.3])
-
+# main execute loop
 for param in demoParam:
-    print('vocabulary =', param[0], 'ngram =', param[1],
-          'delta =', param[2], 'extra =', extra)
-    loader = ld(verbose)
-    # loader.loadTrainingData(testingFile)
-    trainer = Trainer(param[0], param[1], param[2], verbose, extra)
-    loader.resetLineCursor()
+    for e in extra:
+        print('vocabulary =', param[0], 'ngram =', param[1],
+              'delta =', param[2], 'extra =', e)
+        loader = ld(verbose)
+        trainer = Trainer(param[0], param[1], param[2], verbose, e)
+        loader.resetLineCursor()
 
-    line = loader.getNextLineInTrainingData()
-    # trainer.feedLineInfo(line[2], line[3])
-
-    while (line != None):
-        # print(line)
-        trainer.feedLineInfo(line[2], line[3])
         line = loader.getNextLineInTrainingData()
 
-    # print(trainer.getTableSize("es"))
+        while (line != None):
+            trainer.feedLineInfo(line[2], line[3])
+            line = loader.getNextLineInTrainingData()
 
-    # line = loader.getNextLineInTrainingData()
-    # print(trainer.euTab.table, 'eu')
-    # print(trainer.caTab.table, 'ca')
-    # print(trainer.glTab.table, 'gl')
-    # print(trainer.esTab.table, 'es')
-    # print(trainer.enTab.table, 'en')
-    # print(trainer.ptTab.table, 'pt')
-    # while(line != None):
-    #     trainer.feedLineInfo(line[2], line[3])
-    #     line = loader.getNextLineInTrainingData()
+        # trainer.fillRestTable()
 
-    # print(trainer.tab.table)
-
-    # print(trainer.euTab.table)
-    # print(trainer.caTab.table)
-    # print(trainer.glTab.table)
-    # print(trainer.esTab.table)
-    # print(trainer.enTab.table)
-    # print(trainer.ptTab.table)
-
-    # print(math.log10(10))
-
-    tester = Tester(trainer)
-
-    loader.resetLineCursor()
-
-    line = loader.getNextLineInTestingData()
-    # print(tester.classify(line[3]))
-
-    while(line != None):
-        tester.doTestLine(line, loader.getLineCursorPos())
+        tester = Tester(trainer)
+        loader.resetLineCursor()
         line = loader.getNextLineInTestingData()
 
-    print(tester.getAccuracy())
+        while(line != None):
+            tester.doTestLine(line, loader.getLineCursorPos())
+            line = loader.getNextLineInTestingData()
 
-    # tester.dumpResult()
+        print(tester.getAccuracy())
+
+        tester.dumpResult()

@@ -29,6 +29,8 @@ for param in demoParam:
             trainer.feedLineInfo(line[2], line[3])
             line = loader.getNextLineInTrainingData()
 
+        # trainer.fillRestTable()
+
         tester = Tester(trainer)
         loader.resetLineCursor()
         line = loader.getNextLineInTestingData()

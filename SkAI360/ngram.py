@@ -16,6 +16,7 @@ class NGram:
         self.delta = delta
         self.e = e
         self.table = dict()
+        self.alphabets = set()
         if(self.n == 1):
             self.__nGram1()
         elif(self.n == 2):
@@ -98,6 +99,8 @@ class NGram:
     def __uSpaceReplace(self, chars: str):
         stri = ""
         for c in chars:
+            if((self.V == 2) & c.isalpha()):
+                self.alphabets.add(c)
             if c.isspace():
                 stri += " "
             else:
@@ -113,6 +116,8 @@ class NGram:
             self.table[subStr] = 0
 
         self.table[subStr] += 1
+        if((self.V == 2) & subStr.isalpha()):
+            self.alphabets.add(subStr)
 
     # private function
     # feed 2-gram
@@ -267,3 +272,25 @@ class NGram:
                         size += len(self.table[x][y][z])
 
             return size
+
+    # fill the rest of table
+    def fillRestTable(self):
+        if(self.V == 2):
+            if(self.n == 2):
+                for x in self.alphabets:
+                    if(x not in self.table):
+                        self.table[x] = dict()
+                    for y in self.alphabets:
+                        if(y not in self.table[x]):
+                            self.table[x][y] = 0
+
+            if(self.n == 3):
+                for x in self.alphabets:
+                    if(x not in self.table):
+                        self.table[x] = dict()
+                    for y in self.alphabets:
+                        if(y not in self.table[x]):
+                            self.table[x][y] = dict()
+                        for z in self.alphabets:
+                            if(z not in self.table[x][y]):
+                                self.table[x][y][z] = 0
