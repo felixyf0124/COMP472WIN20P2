@@ -27,3 +27,6 @@ Evaluate and analyze the results of the above models on a new test set that will
 
 #### to run for our own model:
 `python3 try.py`
+
+#### all output files are in the directory:
+`./SkAI360/output/`
